@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entity;
+package similarity.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -31,12 +31,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "execution")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AutoExecution.findAll", query = "SELECT a FROM AutoExecution a")
-    , @NamedQuery(name = "AutoExecution.findById", query = "SELECT a FROM AutoExecution a WHERE a.id = :id")
-    , @NamedQuery(name = "AutoExecution.findByDate", query = "SELECT a FROM AutoExecution a WHERE a.date = :date")
-    , @NamedQuery(name = "AutoExecution.findBySystemName", query = "SELECT a FROM AutoExecution a WHERE a.systemName = :systemName")
-    , @NamedQuery(name = "AutoExecution.findBySystemVersion", query = "SELECT a FROM AutoExecution a WHERE a.systemVersion = :systemVersion")})
-public class AutoExecution implements Serializable {
+    @NamedQuery(name = "Execution.findAll", query = "SELECT a FROM Execution a")
+    , @NamedQuery(name = "Execution.findById", query = "SELECT a FROM Execution a WHERE a.id = :id")
+    , @NamedQuery(name = "Execution.findByDate", query = "SELECT a FROM Execution a WHERE a.date = :date")
+    , @NamedQuery(name = "Execution.findBySystemName", query = "SELECT a FROM Execution a WHERE a.systemName = :systemName")
+    , @NamedQuery(name = "Execution.findBySystemVersion", query = "SELECT a FROM Execution a WHERE a.systemVersion = :systemVersion")})
+public class Execution implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -54,10 +54,10 @@ public class AutoExecution implements Serializable {
     @OneToMany(mappedBy = "executionId")
     private List<AutoScenario> autoScenarioList;
 
-    public AutoExecution() {
+    public Execution() {
     }
 
-    public AutoExecution(Long id) {
+    public Execution(Long id) {
         this.id = id;
     }
 
@@ -112,10 +112,10 @@ public class AutoExecution implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof AutoExecution)) {
+        if (!(object instanceof Execution)) {
             return false;
         }
-        AutoExecution other = (AutoExecution) object;
+        Execution other = (Execution) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -124,7 +124,7 @@ public class AutoExecution implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.AutoExecution[ id=" + id + " ]";
+        return "similarity.entity.Execution[ id=" + id + " ]";
     }
     
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entity;
+package similarity.entity;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
@@ -108,7 +108,7 @@ public class AutoQuery implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.AutoQuery[ id=" + id + " ]";
+        return "similarity.entity.AutoQuery[ id=" + id + " ]";
     }
     
 }

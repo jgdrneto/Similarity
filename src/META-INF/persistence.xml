@@ -2,10 +2,10 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="PerfMiner-AutoTestsPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>entity.AutoNode</class>
-    <class>entity.AutoScenario</class>
-    <class>entity.AutoQuery</class>
-    <class>entity.AutoExecution</class>
+    <class>similarity.entity.AutoNode</class>
+    <class>similarity.entity.AutoScenario</class>
+    <class>similarity.entity.AutoQuery</class>
+    <class>similarity.entity.Execution</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/scenario_analyzer_db_2"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
@@ -16,10 +16,10 @@
   
   <persistence-unit name="PerfMiner-ManualTestsPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>entity.AutoNode</class>
-    <class>entity.AutoScenario</class>
-    <class>entity.AutoQuery</class>
-    <class>entity.AutoExecution</class>
+    <class>similarity.entity.AutoNode</class>
+    <class>similarity.entity.AutoScenario</class>
+    <class>similarity.entity.AutoQuery</class>
+    <class>similarity.entity.Execution</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/scenario_analyzer_db"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>

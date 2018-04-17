@@ -6,13 +6,15 @@
 package controller;
 
 import controller.exceptions.NonexistentEntityException;
-import entity.AutoExecution;
+import similarity.entity.Execution;
+import similarity.entity.AutoScenario;
+
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entity.AutoScenario;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -33,7 +35,7 @@ public class AutoExecutionJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(AutoExecution autoExecution) {
+    public void create(Execution autoExecution) {
         if (autoExecution.getAutoScenarioList() == null) {
             autoExecution.setAutoScenarioList(new ArrayList<AutoScenario>());
         }
@@ -49,7 +51,7 @@ public class AutoExecutionJpaController implements Serializable {
             autoExecution.setAutoScenarioList(attachedAutoScenarioList);
             em.persist(autoExecution);
             for (AutoScenario autoScenarioListAutoScenario : autoExecution.getAutoScenarioList()) {
-                AutoExecution oldExecutionIdOfAutoScenarioListAutoScenario = autoScenarioListAutoScenario.getExecutionId();
+                Execution oldExecutionIdOfAutoScenarioListAutoScenario = autoScenarioListAutoScenario.getExecutionId();
                 autoScenarioListAutoScenario.setExecutionId(autoExecution);
                 autoScenarioListAutoScenario = em.merge(autoScenarioListAutoScenario);
                 if (oldExecutionIdOfAutoScenarioListAutoScenario != null) {
@@ -65,12 +67,12 @@ public class AutoExecutionJpaController implements Serializable {
         }
     }
 
-    public void edit(AutoExecution autoExecution) throws NonexistentEntityException, Exception {
+    public void edit(Execution autoExecution) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoExecution persistentAutoExecution = em.find(AutoExecution.class, autoExecution.getId());
+            Execution persistentAutoExecution = em.find(Execution.class, autoExecution.getId());
             List<AutoScenario> autoScenarioListOld = persistentAutoExecution.getAutoScenarioList();
             List<AutoScenario> autoScenarioListNew = autoExecution.getAutoScenarioList();
             List<AutoScenario> attachedAutoScenarioListNew = new ArrayList<AutoScenario>();
@@ -89,7 +91,7 @@ public class AutoExecutionJpaController implements Serializable {
             }
             for (AutoScenario autoScenarioListNewAutoScenario : autoScenarioListNew) {
                 if (!autoScenarioListOld.contains(autoScenarioListNewAutoScenario)) {
-                    AutoExecution oldExecutionIdOfAutoScenarioListNewAutoScenario = autoScenarioListNewAutoScenario.getExecutionId();
+                    Execution oldExecutionIdOfAutoScenarioListNewAutoScenario = autoScenarioListNewAutoScenario.getExecutionId();
                     autoScenarioListNewAutoScenario.setExecutionId(autoExecution);
                     autoScenarioListNewAutoScenario = em.merge(autoScenarioListNewAutoScenario);
                     if (oldExecutionIdOfAutoScenarioListNewAutoScenario != null && !oldExecutionIdOfAutoScenarioListNewAutoScenario.equals(autoExecution)) {
@@ -104,7 +106,7 @@ public class AutoExecutionJpaController implements Serializable {
             if (msg == null || msg.length() == 0) {
                 Long id = autoExecution.getId();
                 if (findAutoExecution(id) == null) {
-                    throw new NonexistentEntityException("The autoExecution with id " + id + " no longer exists.");
+                    throw new NonexistentEntityException("The Execution with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -120,12 +122,12 @@ public class AutoExecutionJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoExecution autoExecution;
+            Execution autoExecution;
             try {
-                autoExecution = em.getReference(AutoExecution.class, id);
+                autoExecution = em.getReference(Execution.class, id);
                 autoExecution.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The autoExecution with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The Execution with id " + id + " no longer exists.", enfe);
             }
             List<AutoScenario> autoScenarioList = autoExecution.getAutoScenarioList();
             for (AutoScenario autoScenarioListAutoScenario : autoScenarioList) {
@@ -141,19 +143,19 @@ public class AutoExecutionJpaController implements Serializable {
         }
     }
 
-    public List<AutoExecution> findAutoExecutionEntities() {
+    public List<Execution> findAutoExecutionEntities() {
         return findAutoExecutionEntities(true, -1, -1);
     }
 
-    public List<AutoExecution> findAutoExecutionEntities(int maxResults, int firstResult) {
+    public List<Execution> findAutoExecutionEntities(int maxResults, int firstResult) {
         return findAutoExecutionEntities(false, maxResults, firstResult);
     }
 
-    private List<AutoExecution> findAutoExecutionEntities(boolean all, int maxResults, int firstResult) {
+    private List<Execution> findAutoExecutionEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(AutoExecution.class));
+            cq.select(cq.from(Execution.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -165,10 +167,10 @@ public class AutoExecutionJpaController implements Serializable {
         }
     }
 
-    public AutoExecution findAutoExecution(Long id) {
+    public Execution findAutoExecution(Long id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(AutoExecution.class, id);
+            return em.find(Execution.class, id);
         } finally {
             em.close();
         }
@@ -178,7 +180,7 @@ public class AutoExecutionJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<AutoExecution> rt = cq.from(AutoExecution.class);
+            Root<Execution> rt = cq.from(Execution.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

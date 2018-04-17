@@ -6,13 +6,15 @@
 package controller;
 
 import controller.exceptions.NonexistentEntityException;
+import similarity.entity.AutoNode;
+import similarity.entity.AutoQuery;
+
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entity.AutoNode;
-import entity.AutoQuery;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

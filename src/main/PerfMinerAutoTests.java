@@ -7,8 +7,8 @@ package main;
 
 import controller.AutoNodeJpaController;
 import controller.AutoScenarioJpaController;
-import entity.AutoNode;
-import entity.AutoScenario;
+import similarity.entity.AutoNode;
+import similarity.entity.AutoScenario;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -36,19 +36,19 @@ public class PerfMinerAutoTests {
      */
     
     public static void main(String[] args) {
-
+    	
+    	//Entidade do banco de testes automáticos
         EntityManagerFactory emfAT = Persistence.createEntityManagerFactory("PerfMiner-AutoTestsPU");
-        AutoScenarioJpaController daoScenario = new AutoScenarioJpaController(emfAT);
+        EntityManagerFactory emfMT = Persistence.createEntityManagerFactory("PerfMiner-ManualTestsPU");
         
-        List<AutoScenario> registros = daoScenario.findAutoScenarioEntities();        
-        //ArrayList<String> tuplas = new ArrayList<>();
+        AutoScenarioJpaController scenarioAuto = new AutoScenarioJpaController(emfAT);
+        AutoScenarioJpaController scenarioManual = new AutoScenarioJpaController(emfMT);
         
-        AutoScenario s = registros.get(24);
-        
-        System.out.println(s.getName());
-        
-        System.out.println("Quantidade de cenários automáticos: " + registros.size());
-         
+        List<AutoScenario> registrosAuto = scenarioAuto.findAutoScenarioEntities();
+        List<AutoScenario> registrosManual = scenarioManual.findAutoScenarioEntities();
+                
+        System.out.println("Quantidade de cenários automáticos: " + registrosAuto.size());
+        System.out.println("Quantidade de cenários manuais: " + registrosManual.size()); 
     }
   
 }

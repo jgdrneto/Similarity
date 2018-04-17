@@ -6,14 +6,16 @@
 package controller;
 
 import controller.exceptions.NonexistentEntityException;
+import similarity.entity.Execution;
+import similarity.entity.AutoNode;
+import similarity.entity.AutoScenario;
+
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import entity.AutoExecution;
-import entity.AutoNode;
-import entity.AutoScenario;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -42,7 +44,7 @@ public class AutoScenarioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoExecution executionId = autoScenario.getExecutionId();
+            Execution executionId = autoScenario.getExecutionId();
             if (executionId != null) {
                 executionId = em.getReference(executionId.getClass(), executionId.getId());
                 autoScenario.setExecutionId(executionId);
@@ -85,8 +87,8 @@ public class AutoScenarioJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             AutoScenario persistentAutoScenario = em.find(AutoScenario.class, autoScenario.getId());
-            AutoExecution executionIdOld = persistentAutoScenario.getExecutionId();
-            AutoExecution executionIdNew = autoScenario.getExecutionId();
+            Execution executionIdOld = persistentAutoScenario.getExecutionId();
+            Execution executionIdNew = autoScenario.getExecutionId();
             AutoNode rootIdOld = persistentAutoScenario.getRootId();
             AutoNode rootIdNew = autoScenario.getRootId();
             List<AutoNode> autoNodeListOld = persistentAutoScenario.getAutoNodeList();
@@ -164,7 +166,7 @@ public class AutoScenarioJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The autoScenario with id " + id + " no longer exists.", enfe);
             }
-            AutoExecution executionId = autoScenario.getExecutionId();
+            Execution executionId = autoScenario.getExecutionId();
             if (executionId != null) {
                 executionId.getAutoScenarioList().remove(autoScenario);
                 executionId = em.merge(executionId);

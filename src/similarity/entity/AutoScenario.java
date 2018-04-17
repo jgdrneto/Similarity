@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entity;
+package similarity.entity;
 
 import java.io.Serializable;
 import java.math.BigInteger;
@@ -68,7 +68,7 @@ public class AutoScenario implements Serializable {
     private List<AutoNode> autoNodeList;
     @JoinColumn(name = "execution_id", referencedColumnName = "id")
     @ManyToOne
-    private AutoExecution executionId;
+    private Execution executionId;
     @JoinColumn(name = "root_id", referencedColumnName = "id")
     @ManyToOne
     private AutoNode rootId;
@@ -137,11 +137,11 @@ public class AutoScenario implements Serializable {
         this.autoNodeList = autoNodeList;
     }
 
-    public AutoExecution getExecutionId() {
+    public Execution getExecutionId() {
         return executionId;
     }
 
-    public void setExecutionId(AutoExecution executionId) {
+    public void setExecutionId(Execution executionId) {
         this.executionId = executionId;
     }
 
@@ -175,7 +175,7 @@ public class AutoScenario implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.AutoScenario[ id=" + id + " ]";
+        return "similarity.entity.AutoScenario[ id=" + id + " ]";
     }
     
 }
