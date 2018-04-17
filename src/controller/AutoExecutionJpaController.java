@@ -7,7 +7,7 @@ package controller;
 
 import controller.exceptions.NonexistentEntityException;
 import similarity.entity.Execution;
-import similarity.entity.AutoScenario;
+import similarity.entity.Scenario;
 
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -37,20 +37,20 @@ public class AutoExecutionJpaController implements Serializable {
 
     public void create(Execution autoExecution) {
         if (autoExecution.getAutoScenarioList() == null) {
-            autoExecution.setAutoScenarioList(new ArrayList<AutoScenario>());
+            autoExecution.setAutoScenarioList(new ArrayList<Scenario>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<AutoScenario> attachedAutoScenarioList = new ArrayList<AutoScenario>();
-            for (AutoScenario autoScenarioListAutoScenarioToAttach : autoExecution.getAutoScenarioList()) {
+            List<Scenario> attachedAutoScenarioList = new ArrayList<Scenario>();
+            for (Scenario autoScenarioListAutoScenarioToAttach : autoExecution.getAutoScenarioList()) {
                 autoScenarioListAutoScenarioToAttach = em.getReference(autoScenarioListAutoScenarioToAttach.getClass(), autoScenarioListAutoScenarioToAttach.getId());
                 attachedAutoScenarioList.add(autoScenarioListAutoScenarioToAttach);
             }
             autoExecution.setAutoScenarioList(attachedAutoScenarioList);
             em.persist(autoExecution);
-            for (AutoScenario autoScenarioListAutoScenario : autoExecution.getAutoScenarioList()) {
+            for (Scenario autoScenarioListAutoScenario : autoExecution.getAutoScenarioList()) {
                 Execution oldExecutionIdOfAutoScenarioListAutoScenario = autoScenarioListAutoScenario.getExecutionId();
                 autoScenarioListAutoScenario.setExecutionId(autoExecution);
                 autoScenarioListAutoScenario = em.merge(autoScenarioListAutoScenario);
@@ -73,23 +73,23 @@ public class AutoExecutionJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Execution persistentAutoExecution = em.find(Execution.class, autoExecution.getId());
-            List<AutoScenario> autoScenarioListOld = persistentAutoExecution.getAutoScenarioList();
-            List<AutoScenario> autoScenarioListNew = autoExecution.getAutoScenarioList();
-            List<AutoScenario> attachedAutoScenarioListNew = new ArrayList<AutoScenario>();
-            for (AutoScenario autoScenarioListNewAutoScenarioToAttach : autoScenarioListNew) {
+            List<Scenario> autoScenarioListOld = persistentAutoExecution.getAutoScenarioList();
+            List<Scenario> autoScenarioListNew = autoExecution.getAutoScenarioList();
+            List<Scenario> attachedAutoScenarioListNew = new ArrayList<Scenario>();
+            for (Scenario autoScenarioListNewAutoScenarioToAttach : autoScenarioListNew) {
                 autoScenarioListNewAutoScenarioToAttach = em.getReference(autoScenarioListNewAutoScenarioToAttach.getClass(), autoScenarioListNewAutoScenarioToAttach.getId());
                 attachedAutoScenarioListNew.add(autoScenarioListNewAutoScenarioToAttach);
             }
             autoScenarioListNew = attachedAutoScenarioListNew;
             autoExecution.setAutoScenarioList(autoScenarioListNew);
             autoExecution = em.merge(autoExecution);
-            for (AutoScenario autoScenarioListOldAutoScenario : autoScenarioListOld) {
+            for (Scenario autoScenarioListOldAutoScenario : autoScenarioListOld) {
                 if (!autoScenarioListNew.contains(autoScenarioListOldAutoScenario)) {
                     autoScenarioListOldAutoScenario.setExecutionId(null);
                     autoScenarioListOldAutoScenario = em.merge(autoScenarioListOldAutoScenario);
                 }
             }
-            for (AutoScenario autoScenarioListNewAutoScenario : autoScenarioListNew) {
+            for (Scenario autoScenarioListNewAutoScenario : autoScenarioListNew) {
                 if (!autoScenarioListOld.contains(autoScenarioListNewAutoScenario)) {
                     Execution oldExecutionIdOfAutoScenarioListNewAutoScenario = autoScenarioListNewAutoScenario.getExecutionId();
                     autoScenarioListNewAutoScenario.setExecutionId(autoExecution);
@@ -129,8 +129,8 @@ public class AutoExecutionJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The Execution with id " + id + " no longer exists.", enfe);
             }
-            List<AutoScenario> autoScenarioList = autoExecution.getAutoScenarioList();
-            for (AutoScenario autoScenarioListAutoScenario : autoScenarioList) {
+            List<Scenario> autoScenarioList = autoExecution.getAutoScenarioList();
+            for (Scenario autoScenarioListAutoScenario : autoScenarioList) {
                 autoScenarioListAutoScenario.setExecutionId(null);
                 autoScenarioListAutoScenario = em.merge(autoScenarioListAutoScenario);
             }

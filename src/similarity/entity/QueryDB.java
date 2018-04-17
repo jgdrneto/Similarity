@@ -27,11 +27,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "query")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AutoQuery.findAll", query = "SELECT a FROM AutoQuery a")
-    , @NamedQuery(name = "AutoQuery.findById", query = "SELECT a FROM AutoQuery a WHERE a.id = :id")
-    , @NamedQuery(name = "AutoQuery.findByQuery", query = "SELECT a FROM AutoQuery a WHERE a.query = :query")
-    , @NamedQuery(name = "AutoQuery.findByType", query = "SELECT a FROM AutoQuery a WHERE a.type = :type")})
-public class AutoQuery implements Serializable {
+    @NamedQuery(name = "QueryDB.findAll", query = "SELECT a FROM QueryDB a")
+    , @NamedQuery(name = "QueryDB.findById", query = "SELECT a FROM QueryDB a WHERE a.id = :id")
+    , @NamedQuery(name = "QueryDB.findByQuery", query = "SELECT a FROM QueryDB a WHERE a.query = :query")
+    , @NamedQuery(name = "QueryDB.findByType", query = "SELECT a FROM QueryDB a WHERE a.type = :type")})
+public class QueryDB implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,12 +45,12 @@ public class AutoQuery implements Serializable {
     private String type;
     @JoinColumn(name = "node_id", referencedColumnName = "id")
     @ManyToOne
-    private AutoNode nodeId;
+    private Node nodeId;
 
-    public AutoQuery() {
+    public QueryDB() {
     }
 
-    public AutoQuery(Long id) {
+    public QueryDB(Long id) {
         this.id = id;
     }
 
@@ -78,11 +78,11 @@ public class AutoQuery implements Serializable {
         this.type = type;
     }
 
-    public AutoNode getNodeId() {
+    public Node getNodeId() {
         return nodeId;
     }
 
-    public void setNodeId(AutoNode nodeId) {
+    public void setNodeId(Node nodeId) {
         this.nodeId = nodeId;
     }
 
@@ -96,10 +96,10 @@ public class AutoQuery implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof AutoQuery)) {
+        if (!(object instanceof QueryDB)) {
             return false;
         }
-        AutoQuery other = (AutoQuery) object;
+        QueryDB other = (QueryDB) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -108,7 +108,7 @@ public class AutoQuery implements Serializable {
 
     @Override
     public String toString() {
-        return "similarity.entity.AutoQuery[ id=" + id + " ]";
+        return "similarity.entity.QueryDB[ id=" + id + " ]";
     }
     
 }

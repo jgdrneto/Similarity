@@ -6,9 +6,9 @@
 package controller;
 
 import controller.exceptions.NonexistentEntityException;
-import similarity.entity.AutoNode;
-import similarity.entity.AutoQuery;
-import similarity.entity.AutoScenario;
+import similarity.entity.Node;
+import similarity.entity.QueryDB;
+import similarity.entity.Scenario;
 
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -37,48 +37,48 @@ public class AutoNodeJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(AutoNode autoNode) {
+    public void create(Node autoNode) {
         if (autoNode.getAutoScenarioList() == null) {
-            autoNode.setAutoScenarioList(new ArrayList<AutoScenario>());
+            autoNode.setAutoScenarioList(new ArrayList<Scenario>());
         }
         if (autoNode.getAutoNodeList() == null) {
-            autoNode.setAutoNodeList(new ArrayList<AutoNode>());
+            autoNode.setAutoNodeList(new ArrayList<Node>());
         }
         if (autoNode.getAutoScenarioList1() == null) {
-            autoNode.setAutoScenarioList1(new ArrayList<AutoScenario>());
+            autoNode.setAutoScenarioList1(new ArrayList<Scenario>());
         }
         if (autoNode.getAutoQueryList() == null) {
-            autoNode.setAutoQueryList(new ArrayList<AutoQuery>());
+            autoNode.setAutoQueryList(new ArrayList<QueryDB>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoNode parentId = autoNode.getParentId();
+            Node parentId = autoNode.getParentId();
             if (parentId != null) {
                 parentId = em.getReference(parentId.getClass(), parentId.getId());
                 autoNode.setParentId(parentId);
             }
-            List<AutoScenario> attachedAutoScenarioList = new ArrayList<AutoScenario>();
-            for (AutoScenario autoScenarioListAutoScenarioToAttach : autoNode.getAutoScenarioList()) {
+            List<Scenario> attachedAutoScenarioList = new ArrayList<Scenario>();
+            for (Scenario autoScenarioListAutoScenarioToAttach : autoNode.getAutoScenarioList()) {
                 autoScenarioListAutoScenarioToAttach = em.getReference(autoScenarioListAutoScenarioToAttach.getClass(), autoScenarioListAutoScenarioToAttach.getId());
                 attachedAutoScenarioList.add(autoScenarioListAutoScenarioToAttach);
             }
             autoNode.setAutoScenarioList(attachedAutoScenarioList);
-            List<AutoNode> attachedAutoNodeList = new ArrayList<AutoNode>();
-            for (AutoNode autoNodeListAutoNodeToAttach : autoNode.getAutoNodeList()) {
+            List<Node> attachedAutoNodeList = new ArrayList<Node>();
+            for (Node autoNodeListAutoNodeToAttach : autoNode.getAutoNodeList()) {
                 autoNodeListAutoNodeToAttach = em.getReference(autoNodeListAutoNodeToAttach.getClass(), autoNodeListAutoNodeToAttach.getId());
                 attachedAutoNodeList.add(autoNodeListAutoNodeToAttach);
             }
             autoNode.setAutoNodeList(attachedAutoNodeList);
-            List<AutoScenario> attachedAutoScenarioList1 = new ArrayList<AutoScenario>();
-            for (AutoScenario autoScenarioList1AutoScenarioToAttach : autoNode.getAutoScenarioList1()) {
+            List<Scenario> attachedAutoScenarioList1 = new ArrayList<Scenario>();
+            for (Scenario autoScenarioList1AutoScenarioToAttach : autoNode.getAutoScenarioList1()) {
                 autoScenarioList1AutoScenarioToAttach = em.getReference(autoScenarioList1AutoScenarioToAttach.getClass(), autoScenarioList1AutoScenarioToAttach.getId());
                 attachedAutoScenarioList1.add(autoScenarioList1AutoScenarioToAttach);
             }
             autoNode.setAutoScenarioList1(attachedAutoScenarioList1);
-            List<AutoQuery> attachedAutoQueryList = new ArrayList<AutoQuery>();
-            for (AutoQuery autoQueryListAutoQueryToAttach : autoNode.getAutoQueryList()) {
+            List<QueryDB> attachedAutoQueryList = new ArrayList<QueryDB>();
+            for (QueryDB autoQueryListAutoQueryToAttach : autoNode.getAutoQueryList()) {
                 autoQueryListAutoQueryToAttach = em.getReference(autoQueryListAutoQueryToAttach.getClass(), autoQueryListAutoQueryToAttach.getId());
                 attachedAutoQueryList.add(autoQueryListAutoQueryToAttach);
             }
@@ -88,12 +88,12 @@ public class AutoNodeJpaController implements Serializable {
                 parentId.getAutoNodeList().add(autoNode);
                 parentId = em.merge(parentId);
             }
-            for (AutoScenario autoScenarioListAutoScenario : autoNode.getAutoScenarioList()) {
+            for (Scenario autoScenarioListAutoScenario : autoNode.getAutoScenarioList()) {
                 autoScenarioListAutoScenario.getAutoNodeList().add(autoNode);
                 autoScenarioListAutoScenario = em.merge(autoScenarioListAutoScenario);
             }
-            for (AutoNode autoNodeListAutoNode : autoNode.getAutoNodeList()) {
-                AutoNode oldParentIdOfAutoNodeListAutoNode = autoNodeListAutoNode.getParentId();
+            for (Node autoNodeListAutoNode : autoNode.getAutoNodeList()) {
+                Node oldParentIdOfAutoNodeListAutoNode = autoNodeListAutoNode.getParentId();
                 autoNodeListAutoNode.setParentId(autoNode);
                 autoNodeListAutoNode = em.merge(autoNodeListAutoNode);
                 if (oldParentIdOfAutoNodeListAutoNode != null) {
@@ -101,8 +101,8 @@ public class AutoNodeJpaController implements Serializable {
                     oldParentIdOfAutoNodeListAutoNode = em.merge(oldParentIdOfAutoNodeListAutoNode);
                 }
             }
-            for (AutoScenario autoScenarioList1AutoScenario : autoNode.getAutoScenarioList1()) {
-                AutoNode oldRootIdOfAutoScenarioList1AutoScenario = autoScenarioList1AutoScenario.getRootId();
+            for (Scenario autoScenarioList1AutoScenario : autoNode.getAutoScenarioList1()) {
+                Node oldRootIdOfAutoScenarioList1AutoScenario = autoScenarioList1AutoScenario.getRootId();
                 autoScenarioList1AutoScenario.setRootId(autoNode);
                 autoScenarioList1AutoScenario = em.merge(autoScenarioList1AutoScenario);
                 if (oldRootIdOfAutoScenarioList1AutoScenario != null) {
@@ -110,8 +110,8 @@ public class AutoNodeJpaController implements Serializable {
                     oldRootIdOfAutoScenarioList1AutoScenario = em.merge(oldRootIdOfAutoScenarioList1AutoScenario);
                 }
             }
-            for (AutoQuery autoQueryListAutoQuery : autoNode.getAutoQueryList()) {
-                AutoNode oldNodeIdOfAutoQueryListAutoQuery = autoQueryListAutoQuery.getNodeId();
+            for (QueryDB autoQueryListAutoQuery : autoNode.getAutoQueryList()) {
+                Node oldNodeIdOfAutoQueryListAutoQuery = autoQueryListAutoQuery.getNodeId();
                 autoQueryListAutoQuery.setNodeId(autoNode);
                 autoQueryListAutoQuery = em.merge(autoQueryListAutoQuery);
                 if (oldNodeIdOfAutoQueryListAutoQuery != null) {
@@ -127,49 +127,49 @@ public class AutoNodeJpaController implements Serializable {
         }
     }
 
-    public void edit(AutoNode autoNode) throws NonexistentEntityException, Exception {
+    public void edit(Node autoNode) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoNode persistentAutoNode = em.find(AutoNode.class, autoNode.getId());
-            AutoNode parentIdOld = persistentAutoNode.getParentId();
-            AutoNode parentIdNew = autoNode.getParentId();
-            List<AutoScenario> autoScenarioListOld = persistentAutoNode.getAutoScenarioList();
-            List<AutoScenario> autoScenarioListNew = autoNode.getAutoScenarioList();
-            List<AutoNode> autoNodeListOld = persistentAutoNode.getAutoNodeList();
-            List<AutoNode> autoNodeListNew = autoNode.getAutoNodeList();
-            List<AutoScenario> autoScenarioList1Old = persistentAutoNode.getAutoScenarioList1();
-            List<AutoScenario> autoScenarioList1New = autoNode.getAutoScenarioList1();
-            List<AutoQuery> autoQueryListOld = persistentAutoNode.getAutoQueryList();
-            List<AutoQuery> autoQueryListNew = autoNode.getAutoQueryList();
+            Node persistentAutoNode = em.find(Node.class, autoNode.getId());
+            Node parentIdOld = persistentAutoNode.getParentId();
+            Node parentIdNew = autoNode.getParentId();
+            List<Scenario> autoScenarioListOld = persistentAutoNode.getAutoScenarioList();
+            List<Scenario> autoScenarioListNew = autoNode.getAutoScenarioList();
+            List<Node> autoNodeListOld = persistentAutoNode.getAutoNodeList();
+            List<Node> autoNodeListNew = autoNode.getAutoNodeList();
+            List<Scenario> autoScenarioList1Old = persistentAutoNode.getAutoScenarioList1();
+            List<Scenario> autoScenarioList1New = autoNode.getAutoScenarioList1();
+            List<QueryDB> autoQueryListOld = persistentAutoNode.getAutoQueryList();
+            List<QueryDB> autoQueryListNew = autoNode.getAutoQueryList();
             if (parentIdNew != null) {
                 parentIdNew = em.getReference(parentIdNew.getClass(), parentIdNew.getId());
                 autoNode.setParentId(parentIdNew);
             }
-            List<AutoScenario> attachedAutoScenarioListNew = new ArrayList<AutoScenario>();
-            for (AutoScenario autoScenarioListNewAutoScenarioToAttach : autoScenarioListNew) {
+            List<Scenario> attachedAutoScenarioListNew = new ArrayList<Scenario>();
+            for (Scenario autoScenarioListNewAutoScenarioToAttach : autoScenarioListNew) {
                 autoScenarioListNewAutoScenarioToAttach = em.getReference(autoScenarioListNewAutoScenarioToAttach.getClass(), autoScenarioListNewAutoScenarioToAttach.getId());
                 attachedAutoScenarioListNew.add(autoScenarioListNewAutoScenarioToAttach);
             }
             autoScenarioListNew = attachedAutoScenarioListNew;
             autoNode.setAutoScenarioList(autoScenarioListNew);
-            List<AutoNode> attachedAutoNodeListNew = new ArrayList<AutoNode>();
-            for (AutoNode autoNodeListNewAutoNodeToAttach : autoNodeListNew) {
+            List<Node> attachedAutoNodeListNew = new ArrayList<Node>();
+            for (Node autoNodeListNewAutoNodeToAttach : autoNodeListNew) {
                 autoNodeListNewAutoNodeToAttach = em.getReference(autoNodeListNewAutoNodeToAttach.getClass(), autoNodeListNewAutoNodeToAttach.getId());
                 attachedAutoNodeListNew.add(autoNodeListNewAutoNodeToAttach);
             }
             autoNodeListNew = attachedAutoNodeListNew;
             autoNode.setAutoNodeList(autoNodeListNew);
-            List<AutoScenario> attachedAutoScenarioList1New = new ArrayList<AutoScenario>();
-            for (AutoScenario autoScenarioList1NewAutoScenarioToAttach : autoScenarioList1New) {
+            List<Scenario> attachedAutoScenarioList1New = new ArrayList<Scenario>();
+            for (Scenario autoScenarioList1NewAutoScenarioToAttach : autoScenarioList1New) {
                 autoScenarioList1NewAutoScenarioToAttach = em.getReference(autoScenarioList1NewAutoScenarioToAttach.getClass(), autoScenarioList1NewAutoScenarioToAttach.getId());
                 attachedAutoScenarioList1New.add(autoScenarioList1NewAutoScenarioToAttach);
             }
             autoScenarioList1New = attachedAutoScenarioList1New;
             autoNode.setAutoScenarioList1(autoScenarioList1New);
-            List<AutoQuery> attachedAutoQueryListNew = new ArrayList<AutoQuery>();
-            for (AutoQuery autoQueryListNewAutoQueryToAttach : autoQueryListNew) {
+            List<QueryDB> attachedAutoQueryListNew = new ArrayList<QueryDB>();
+            for (QueryDB autoQueryListNewAutoQueryToAttach : autoQueryListNew) {
                 autoQueryListNewAutoQueryToAttach = em.getReference(autoQueryListNewAutoQueryToAttach.getClass(), autoQueryListNewAutoQueryToAttach.getId());
                 attachedAutoQueryListNew.add(autoQueryListNewAutoQueryToAttach);
             }
@@ -184,27 +184,27 @@ public class AutoNodeJpaController implements Serializable {
                 parentIdNew.getAutoNodeList().add(autoNode);
                 parentIdNew = em.merge(parentIdNew);
             }
-            for (AutoScenario autoScenarioListOldAutoScenario : autoScenarioListOld) {
+            for (Scenario autoScenarioListOldAutoScenario : autoScenarioListOld) {
                 if (!autoScenarioListNew.contains(autoScenarioListOldAutoScenario)) {
                     autoScenarioListOldAutoScenario.getAutoNodeList().remove(autoNode);
                     autoScenarioListOldAutoScenario = em.merge(autoScenarioListOldAutoScenario);
                 }
             }
-            for (AutoScenario autoScenarioListNewAutoScenario : autoScenarioListNew) {
+            for (Scenario autoScenarioListNewAutoScenario : autoScenarioListNew) {
                 if (!autoScenarioListOld.contains(autoScenarioListNewAutoScenario)) {
                     autoScenarioListNewAutoScenario.getAutoNodeList().add(autoNode);
                     autoScenarioListNewAutoScenario = em.merge(autoScenarioListNewAutoScenario);
                 }
             }
-            for (AutoNode autoNodeListOldAutoNode : autoNodeListOld) {
+            for (Node autoNodeListOldAutoNode : autoNodeListOld) {
                 if (!autoNodeListNew.contains(autoNodeListOldAutoNode)) {
                     autoNodeListOldAutoNode.setParentId(null);
                     autoNodeListOldAutoNode = em.merge(autoNodeListOldAutoNode);
                 }
             }
-            for (AutoNode autoNodeListNewAutoNode : autoNodeListNew) {
+            for (Node autoNodeListNewAutoNode : autoNodeListNew) {
                 if (!autoNodeListOld.contains(autoNodeListNewAutoNode)) {
-                    AutoNode oldParentIdOfAutoNodeListNewAutoNode = autoNodeListNewAutoNode.getParentId();
+                    Node oldParentIdOfAutoNodeListNewAutoNode = autoNodeListNewAutoNode.getParentId();
                     autoNodeListNewAutoNode.setParentId(autoNode);
                     autoNodeListNewAutoNode = em.merge(autoNodeListNewAutoNode);
                     if (oldParentIdOfAutoNodeListNewAutoNode != null && !oldParentIdOfAutoNodeListNewAutoNode.equals(autoNode)) {
@@ -213,15 +213,15 @@ public class AutoNodeJpaController implements Serializable {
                     }
                 }
             }
-            for (AutoScenario autoScenarioList1OldAutoScenario : autoScenarioList1Old) {
+            for (Scenario autoScenarioList1OldAutoScenario : autoScenarioList1Old) {
                 if (!autoScenarioList1New.contains(autoScenarioList1OldAutoScenario)) {
                     autoScenarioList1OldAutoScenario.setRootId(null);
                     autoScenarioList1OldAutoScenario = em.merge(autoScenarioList1OldAutoScenario);
                 }
             }
-            for (AutoScenario autoScenarioList1NewAutoScenario : autoScenarioList1New) {
+            for (Scenario autoScenarioList1NewAutoScenario : autoScenarioList1New) {
                 if (!autoScenarioList1Old.contains(autoScenarioList1NewAutoScenario)) {
-                    AutoNode oldRootIdOfAutoScenarioList1NewAutoScenario = autoScenarioList1NewAutoScenario.getRootId();
+                    Node oldRootIdOfAutoScenarioList1NewAutoScenario = autoScenarioList1NewAutoScenario.getRootId();
                     autoScenarioList1NewAutoScenario.setRootId(autoNode);
                     autoScenarioList1NewAutoScenario = em.merge(autoScenarioList1NewAutoScenario);
                     if (oldRootIdOfAutoScenarioList1NewAutoScenario != null && !oldRootIdOfAutoScenarioList1NewAutoScenario.equals(autoNode)) {
@@ -230,15 +230,15 @@ public class AutoNodeJpaController implements Serializable {
                     }
                 }
             }
-            for (AutoQuery autoQueryListOldAutoQuery : autoQueryListOld) {
+            for (QueryDB autoQueryListOldAutoQuery : autoQueryListOld) {
                 if (!autoQueryListNew.contains(autoQueryListOldAutoQuery)) {
                     autoQueryListOldAutoQuery.setNodeId(null);
                     autoQueryListOldAutoQuery = em.merge(autoQueryListOldAutoQuery);
                 }
             }
-            for (AutoQuery autoQueryListNewAutoQuery : autoQueryListNew) {
+            for (QueryDB autoQueryListNewAutoQuery : autoQueryListNew) {
                 if (!autoQueryListOld.contains(autoQueryListNewAutoQuery)) {
-                    AutoNode oldNodeIdOfAutoQueryListNewAutoQuery = autoQueryListNewAutoQuery.getNodeId();
+                    Node oldNodeIdOfAutoQueryListNewAutoQuery = autoQueryListNewAutoQuery.getNodeId();
                     autoQueryListNewAutoQuery.setNodeId(autoNode);
                     autoQueryListNewAutoQuery = em.merge(autoQueryListNewAutoQuery);
                     if (oldNodeIdOfAutoQueryListNewAutoQuery != null && !oldNodeIdOfAutoQueryListNewAutoQuery.equals(autoNode)) {
@@ -269,35 +269,35 @@ public class AutoNodeJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoNode autoNode;
+            Node autoNode;
             try {
-                autoNode = em.getReference(AutoNode.class, id);
+                autoNode = em.getReference(Node.class, id);
                 autoNode.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The autoNode with id " + id + " no longer exists.", enfe);
             }
-            AutoNode parentId = autoNode.getParentId();
+            Node parentId = autoNode.getParentId();
             if (parentId != null) {
                 parentId.getAutoNodeList().remove(autoNode);
                 parentId = em.merge(parentId);
             }
-            List<AutoScenario> autoScenarioList = autoNode.getAutoScenarioList();
-            for (AutoScenario autoScenarioListAutoScenario : autoScenarioList) {
+            List<Scenario> autoScenarioList = autoNode.getAutoScenarioList();
+            for (Scenario autoScenarioListAutoScenario : autoScenarioList) {
                 autoScenarioListAutoScenario.getAutoNodeList().remove(autoNode);
                 autoScenarioListAutoScenario = em.merge(autoScenarioListAutoScenario);
             }
-            List<AutoNode> autoNodeList = autoNode.getAutoNodeList();
-            for (AutoNode autoNodeListAutoNode : autoNodeList) {
+            List<Node> autoNodeList = autoNode.getAutoNodeList();
+            for (Node autoNodeListAutoNode : autoNodeList) {
                 autoNodeListAutoNode.setParentId(null);
                 autoNodeListAutoNode = em.merge(autoNodeListAutoNode);
             }
-            List<AutoScenario> autoScenarioList1 = autoNode.getAutoScenarioList1();
-            for (AutoScenario autoScenarioList1AutoScenario : autoScenarioList1) {
+            List<Scenario> autoScenarioList1 = autoNode.getAutoScenarioList1();
+            for (Scenario autoScenarioList1AutoScenario : autoScenarioList1) {
                 autoScenarioList1AutoScenario.setRootId(null);
                 autoScenarioList1AutoScenario = em.merge(autoScenarioList1AutoScenario);
             }
-            List<AutoQuery> autoQueryList = autoNode.getAutoQueryList();
-            for (AutoQuery autoQueryListAutoQuery : autoQueryList) {
+            List<QueryDB> autoQueryList = autoNode.getAutoQueryList();
+            for (QueryDB autoQueryListAutoQuery : autoQueryList) {
                 autoQueryListAutoQuery.setNodeId(null);
                 autoQueryListAutoQuery = em.merge(autoQueryListAutoQuery);
             }
@@ -310,19 +310,19 @@ public class AutoNodeJpaController implements Serializable {
         }
     }
 
-    public List<AutoNode> findAutoNodeEntities() {
+    public List<Node> findAutoNodeEntities() {
         return findAutoNodeEntities(true, -1, -1);
     }
 
-    public List<AutoNode> findAutoNodeEntities(int maxResults, int firstResult) {
+    public List<Node> findAutoNodeEntities(int maxResults, int firstResult) {
         return findAutoNodeEntities(false, maxResults, firstResult);
     }
 
-    private List<AutoNode> findAutoNodeEntities(boolean all, int maxResults, int firstResult) {
+    private List<Node> findAutoNodeEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(AutoNode.class));
+            cq.select(cq.from(Node.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -334,10 +334,10 @@ public class AutoNodeJpaController implements Serializable {
         }
     }
 
-    public AutoNode findAutoNode(Long id) {
+    public Node findAutoNode(Long id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(AutoNode.class, id);
+            return em.find(Node.class, id);
         } finally {
             em.close();
         }
@@ -347,7 +347,7 @@ public class AutoNodeJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<AutoNode> rt = cq.from(AutoNode.class);
+            Root<Node> rt = cq.from(Node.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

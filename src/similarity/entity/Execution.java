@@ -52,7 +52,7 @@ public class Execution implements Serializable {
     @Column(name = "system_version")
     private String systemVersion;
     @OneToMany(mappedBy = "executionId")
-    private List<AutoScenario> autoScenarioList;
+    private List<Scenario> autoScenarioList;
 
     public Execution() {
     }
@@ -94,11 +94,11 @@ public class Execution implements Serializable {
     }
 
     @XmlTransient
-    public List<AutoScenario> getAutoScenarioList() {
+    public List<Scenario> getAutoScenarioList() {
         return autoScenarioList;
     }
 
-    public void setAutoScenarioList(List<AutoScenario> autoScenarioList) {
+    public void setAutoScenarioList(List<Scenario> autoScenarioList) {
         this.autoScenarioList = autoScenarioList;
     }
 

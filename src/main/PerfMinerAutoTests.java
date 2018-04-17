@@ -7,8 +7,8 @@ package main;
 
 import controller.AutoNodeJpaController;
 import controller.AutoScenarioJpaController;
-import similarity.entity.AutoNode;
-import similarity.entity.AutoScenario;
+import similarity.entity.Node;
+import similarity.entity.Scenario;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -44,8 +44,8 @@ public class PerfMinerAutoTests {
         AutoScenarioJpaController scenarioAuto = new AutoScenarioJpaController(emfAT);
         AutoScenarioJpaController scenarioManual = new AutoScenarioJpaController(emfMT);
         
-        List<AutoScenario> registrosAuto = scenarioAuto.findAutoScenarioEntities();
-        List<AutoScenario> registrosManual = scenarioManual.findAutoScenarioEntities();
+        List<Scenario> registrosAuto = scenarioAuto.findAutoScenarioEntities();
+        List<Scenario> registrosManual = scenarioManual.findAutoScenarioEntities();
                 
         System.out.println("Quantidade de cenários automáticos: " + registrosAuto.size());
         System.out.println("Quantidade de cenários manuais: " + registrosManual.size()); 

@@ -6,8 +6,8 @@
 package controller;
 
 import controller.exceptions.NonexistentEntityException;
-import similarity.entity.AutoNode;
-import similarity.entity.AutoQuery;
+import similarity.entity.Node;
+import similarity.entity.QueryDB;
 
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -34,12 +34,12 @@ public class AutoQueryJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(AutoQuery autoQuery) {
+    public void create(QueryDB autoQuery) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoNode nodeId = autoQuery.getNodeId();
+            Node nodeId = autoQuery.getNodeId();
             if (nodeId != null) {
                 nodeId = em.getReference(nodeId.getClass(), nodeId.getId());
                 autoQuery.setNodeId(nodeId);
@@ -57,14 +57,14 @@ public class AutoQueryJpaController implements Serializable {
         }
     }
 
-    public void edit(AutoQuery autoQuery) throws NonexistentEntityException, Exception {
+    public void edit(QueryDB autoQuery) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoQuery persistentAutoQuery = em.find(AutoQuery.class, autoQuery.getId());
-            AutoNode nodeIdOld = persistentAutoQuery.getNodeId();
-            AutoNode nodeIdNew = autoQuery.getNodeId();
+            QueryDB persistentAutoQuery = em.find(QueryDB.class, autoQuery.getId());
+            Node nodeIdOld = persistentAutoQuery.getNodeId();
+            Node nodeIdNew = autoQuery.getNodeId();
             if (nodeIdNew != null) {
                 nodeIdNew = em.getReference(nodeIdNew.getClass(), nodeIdNew.getId());
                 autoQuery.setNodeId(nodeIdNew);
@@ -100,14 +100,14 @@ public class AutoQueryJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            AutoQuery autoQuery;
+            QueryDB autoQuery;
             try {
-                autoQuery = em.getReference(AutoQuery.class, id);
+                autoQuery = em.getReference(QueryDB.class, id);
                 autoQuery.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The autoQuery with id " + id + " no longer exists.", enfe);
             }
-            AutoNode nodeId = autoQuery.getNodeId();
+            Node nodeId = autoQuery.getNodeId();
             if (nodeId != null) {
                 nodeId.getAutoQueryList().remove(autoQuery);
                 nodeId = em.merge(nodeId);
@@ -121,19 +121,19 @@ public class AutoQueryJpaController implements Serializable {
         }
     }
 
-    public List<AutoQuery> findAutoQueryEntities() {
+    public List<QueryDB> findAutoQueryEntities() {
         return findAutoQueryEntities(true, -1, -1);
     }
 
-    public List<AutoQuery> findAutoQueryEntities(int maxResults, int firstResult) {
+    public List<QueryDB> findAutoQueryEntities(int maxResults, int firstResult) {
         return findAutoQueryEntities(false, maxResults, firstResult);
     }
 
-    private List<AutoQuery> findAutoQueryEntities(boolean all, int maxResults, int firstResult) {
+    private List<QueryDB> findAutoQueryEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(AutoQuery.class));
+            cq.select(cq.from(QueryDB.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -145,10 +145,10 @@ public class AutoQueryJpaController implements Serializable {
         }
     }
 
-    public AutoQuery findAutoQuery(Long id) {
+    public QueryDB findAutoQuery(Long id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(AutoQuery.class, id);
+            return em.find(QueryDB.class, id);
         } finally {
             em.close();
         }
@@ -158,7 +158,7 @@ public class AutoQueryJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<AutoQuery> rt = cq.from(AutoQuery.class);
+            Root<QueryDB> rt = cq.from(QueryDB.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

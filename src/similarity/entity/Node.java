@@ -32,14 +32,14 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "node")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AutoNode.findAll", query = "SELECT a FROM AutoNode a")
-    , @NamedQuery(name = "AutoNode.findById", query = "SELECT a FROM AutoNode a WHERE a.id = :id")
-    , @NamedQuery(name = "AutoNode.findByException", query = "SELECT a FROM AutoNode a WHERE a.exception = :exception")
-    , @NamedQuery(name = "AutoNode.findByTime", query = "SELECT a FROM AutoNode a WHERE a.time = :time")
-    , @NamedQuery(name = "AutoNode.findByConstructor", query = "SELECT a FROM AutoNode a WHERE a.constructor = :constructor")
-    , @NamedQuery(name = "AutoNode.findByMember", query = "SELECT a FROM AutoNode a WHERE a.member = :member")
-    , @NamedQuery(name = "AutoNode.findByRealTime", query = "SELECT a FROM AutoNode a WHERE a.realTime = :realTime")})
-public class AutoNode implements Serializable {
+    @NamedQuery(name = "Node.findAll", query = "SELECT a FROM Node a")
+    , @NamedQuery(name = "Node.findById", query = "SELECT a FROM Node a WHERE a.id = :id")
+    , @NamedQuery(name = "Node.findByException", query = "SELECT a FROM Node a WHERE a.exception = :exception")
+    , @NamedQuery(name = "Node.findByTime", query = "SELECT a FROM Node a WHERE a.time = :time")
+    , @NamedQuery(name = "Node.findByConstructor", query = "SELECT a FROM Node a WHERE a.constructor = :constructor")
+    , @NamedQuery(name = "Node.findByMember", query = "SELECT a FROM Node a WHERE a.member = :member")
+    , @NamedQuery(name = "Node.findByRealTime", query = "SELECT a FROM Node a WHERE a.realTime = :realTime")})
+public class Node implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -58,21 +58,21 @@ public class AutoNode implements Serializable {
     @Column(name = "real_time")
     private BigInteger realTime;
     @ManyToMany(mappedBy = "autoNodeList")
-    private List<AutoScenario> autoScenarioList;
+    private List<Scenario> autoScenarioList;
     @OneToMany(mappedBy = "parentId")
-    private List<AutoNode> autoNodeList;
+    private List<Node> autoNodeList;
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @ManyToOne
-    private AutoNode parentId;
+    private Node parentId;
     @OneToMany(mappedBy = "rootId")
-    private List<AutoScenario> autoScenarioList1;
+    private List<Scenario> autoScenarioList1;
     @OneToMany(mappedBy = "nodeId")
-    private List<AutoQuery> autoQueryList;
+    private List<QueryDB> autoQueryList;
 
-    public AutoNode() {
+    public Node() {
     }
 
-    public AutoNode(Long id) {
+    public Node(Long id) {
         this.id = id;
     }
 
@@ -125,46 +125,46 @@ public class AutoNode implements Serializable {
     }
 
     @XmlTransient
-    public List<AutoScenario> getAutoScenarioList() {
+    public List<Scenario> getAutoScenarioList() {
         return autoScenarioList;
     }
 
-    public void setAutoScenarioList(List<AutoScenario> autoScenarioList) {
+    public void setAutoScenarioList(List<Scenario> autoScenarioList) {
         this.autoScenarioList = autoScenarioList;
     }
 
     @XmlTransient
-    public List<AutoNode> getAutoNodeList() {
+    public List<Node> getAutoNodeList() {
         return autoNodeList;
     }
 
-    public void setAutoNodeList(List<AutoNode> autoNodeList) {
+    public void setAutoNodeList(List<Node> autoNodeList) {
         this.autoNodeList = autoNodeList;
     }
 
-    public AutoNode getParentId() {
+    public Node getParentId() {
         return parentId;
     }
 
-    public void setParentId(AutoNode parentId) {
+    public void setParentId(Node parentId) {
         this.parentId = parentId;
     }
 
     @XmlTransient
-    public List<AutoScenario> getAutoScenarioList1() {
+    public List<Scenario> getAutoScenarioList1() {
         return autoScenarioList1;
     }
 
-    public void setAutoScenarioList1(List<AutoScenario> autoScenarioList1) {
+    public void setAutoScenarioList1(List<Scenario> autoScenarioList1) {
         this.autoScenarioList1 = autoScenarioList1;
     }
 
     @XmlTransient
-    public List<AutoQuery> getAutoQueryList() {
+    public List<QueryDB> getAutoQueryList() {
         return autoQueryList;
     }
 
-    public void setAutoQueryList(List<AutoQuery> autoQueryList) {
+    public void setAutoQueryList(List<QueryDB> autoQueryList) {
         this.autoQueryList = autoQueryList;
     }
 
@@ -178,10 +178,10 @@ public class AutoNode implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof AutoNode)) {
+        if (!(object instanceof Node)) {
             return false;
         }
-        AutoNode other = (AutoNode) object;
+        Node other = (Node) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -190,7 +190,7 @@ public class AutoNode implements Serializable {
 
     @Override
     public String toString() {
-        return "similarity.entity.AutoNode[ id=" + id + " ]";
+        return "similarity.entity.Node[ id=" + id + " ]";
     }
     
 }

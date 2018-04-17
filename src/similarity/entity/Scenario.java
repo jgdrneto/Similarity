@@ -35,14 +35,14 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "scenario")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AutoScenario.findAll", query = "SELECT a FROM AutoScenario a")
-    , @NamedQuery(name = "AutoScenario.findById", query = "SELECT a FROM AutoScenario a WHERE a.id = :id")
-    , @NamedQuery(name = "AutoScenario.findByDate", query = "SELECT a FROM AutoScenario a WHERE a.date = :date")
-    , @NamedQuery(name = "AutoScenario.findByName", query = "SELECT a FROM AutoScenario a WHERE a.name = :name")
-    , @NamedQuery(name = "AutoScenario.findByRequestParameters", query = "SELECT a FROM AutoScenario a WHERE a.requestParameters = :requestParameters")
-    , @NamedQuery(name = "AutoScenario.findByRequestUrl", query = "SELECT a FROM AutoScenario a WHERE a.requestUrl = :requestUrl")
-    , @NamedQuery(name = "AutoScenario.findByThreadId", query = "SELECT a FROM AutoScenario a WHERE a.threadId = :threadId")})
-public class AutoScenario implements Serializable {
+    @NamedQuery(name = "Scenario.findAll", query = "SELECT a FROM Scenario a")
+    , @NamedQuery(name = "Scenario.findById", query = "SELECT a FROM Scenario a WHERE a.id = :id")
+    , @NamedQuery(name = "Scenario.findByDate", query = "SELECT a FROM Scenario a WHERE a.date = :date")
+    , @NamedQuery(name = "Scenario.findByName", query = "SELECT a FROM Scenario a WHERE a.name = :name")
+    , @NamedQuery(name = "Scenario.findByRequestParameters", query = "SELECT a FROM Scenario a WHERE a.requestParameters = :requestParameters")
+    , @NamedQuery(name = "Scenario.findByRequestUrl", query = "SELECT a FROM Scenario a WHERE a.requestUrl = :requestUrl")
+    , @NamedQuery(name = "Scenario.findByThreadId", query = "SELECT a FROM Scenario a WHERE a.threadId = :threadId")})
+public class Scenario implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -65,18 +65,18 @@ public class AutoScenario implements Serializable {
         @JoinColumn(name = "scenario_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "node_id", referencedColumnName = "id")})
     @ManyToMany
-    private List<AutoNode> autoNodeList;
+    private List<Node> autoNodeList;
     @JoinColumn(name = "execution_id", referencedColumnName = "id")
     @ManyToOne
     private Execution executionId;
     @JoinColumn(name = "root_id", referencedColumnName = "id")
     @ManyToOne
-    private AutoNode rootId;
+    private Node rootId;
 
-    public AutoScenario() {
+    public Scenario() {
     }
 
-    public AutoScenario(Long id) {
+    public Scenario(Long id) {
         this.id = id;
     }
 
@@ -129,11 +129,11 @@ public class AutoScenario implements Serializable {
     }
 
     @XmlTransient
-    public List<AutoNode> getAutoNodeList() {
+    public List<Node> getAutoNodeList() {
         return autoNodeList;
     }
 
-    public void setAutoNodeList(List<AutoNode> autoNodeList) {
+    public void setAutoNodeList(List<Node> autoNodeList) {
         this.autoNodeList = autoNodeList;
     }
 
@@ -145,11 +145,11 @@ public class AutoScenario implements Serializable {
         this.executionId = executionId;
     }
 
-    public AutoNode getRootId() {
+    public Node getRootId() {
         return rootId;
     }
 
-    public void setRootId(AutoNode rootId) {
+    public void setRootId(Node rootId) {
         this.rootId = rootId;
     }
 
@@ -163,10 +163,10 @@ public class AutoScenario implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof AutoScenario)) {
+        if (!(object instanceof Scenario)) {
             return false;
         }
-        AutoScenario other = (AutoScenario) object;
+        Scenario other = (Scenario) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -175,7 +175,7 @@ public class AutoScenario implements Serializable {
 
     @Override
     public String toString() {
-        return "similarity.entity.AutoScenario[ id=" + id + " ]";
+        return "similarity.entity.Scenario[ id=" + id + " ]";
     }
     
 }
