@@ -6,7 +6,7 @@
 package main;
 
 import controller.AutoNodeJpaController;
-import controller.AutoScenarioJpaController;
+import controller.ScenarioJPAController;
 import similarity.entity.Node;
 import similarity.entity.Scenario;
 import java.io.File;
@@ -15,16 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-/*
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-*/
+
 /**
  *
  * @author Jullian
@@ -41,11 +32,11 @@ public class PerfMinerAutoTests {
         EntityManagerFactory emfAT = Persistence.createEntityManagerFactory("PerfMiner-AutoTestsPU");
         EntityManagerFactory emfMT = Persistence.createEntityManagerFactory("PerfMiner-ManualTestsPU");
         
-        AutoScenarioJpaController scenarioAuto = new AutoScenarioJpaController(emfAT);
-        AutoScenarioJpaController scenarioManual = new AutoScenarioJpaController(emfMT);
+        ScenarioJPAController scenarioAuto = new ScenarioJPAController(emfAT);
+        ScenarioJPAController scenarioManual = new ScenarioJPAController(emfMT);
         
-        List<Scenario> registrosAuto = scenarioAuto.findAutoScenarioEntities();
-        List<Scenario> registrosManual = scenarioManual.findAutoScenarioEntities();
+        List<Scenario> registrosAuto = scenarioAuto.findEntities();
+        List<Scenario> registrosManual = scenarioManual.findEntities();
                 
         System.out.println("Quantidade de cenários automáticos: " + registrosAuto.size());
         System.out.println("Quantidade de cenários manuais: " + registrosManual.size()); 

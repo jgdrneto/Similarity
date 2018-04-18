@@ -274,7 +274,7 @@ public class AutoNodeJpaController implements Serializable {
                 autoNode = em.getReference(Node.class, id);
                 autoNode.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The autoNode with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The Node with id " + id + " no longer exists.", enfe);
             }
             Node parentId = autoNode.getParentId();
             if (parentId != null) {

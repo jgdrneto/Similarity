@@ -25,15 +25,10 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author Jullian
  */
-public class AutoScenarioJpaController implements Serializable {
+public class ScenarioJPAController extends JPAController<Scenario> implements Serializable {
 
-    public AutoScenarioJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    public ScenarioJPAController(EntityManagerFactory emf) {
+        super(emf,Scenario.class);
     }
 
     public void create(Scenario autoScenario) {
@@ -86,7 +81,7 @@ public class AutoScenarioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Scenario persistentAutoScenario = em.find(Scenario.class, autoScenario.getId());
+            Scenario persistentAutoScenario = em.find(entityClass, autoScenario.getId());
             Execution executionIdOld = persistentAutoScenario.getExecutionId();
             Execution executionIdNew = autoScenario.getExecutionId();
             Node rootIdOld = persistentAutoScenario.getRootId();
@@ -142,8 +137,8 @@ public class AutoScenarioJpaController implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = autoScenario.getId();
-                if (findAutoScenario(id) == null) {
-                    throw new NonexistentEntityException("The autoScenario with id " + id + " no longer exists.");
+                if (findEntity(id) == null) {
+                    throw new NonexistentEntityException("The Scenario with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -161,7 +156,7 @@ public class AutoScenarioJpaController implements Serializable {
             em.getTransaction().begin();
             Scenario autoScenario;
             try {
-                autoScenario = em.getReference(Scenario.class, id);
+                autoScenario = em.getReference(entityClass, id);
                 autoScenario.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The autoScenario with id " + id + " no longer exists.", enfe);
@@ -187,65 +182,6 @@ public class AutoScenarioJpaController implements Serializable {
             if (em != null) {
                 em.close();
             }
-        }
-    }
-
-    public List<Scenario> findAutoScenarioEntities() {
-        return findAutoScenarioEntities(true, -1, -1);
-    }
-
-    public List<Scenario> findAutoScenarioEntities(int maxResults, int firstResult) {
-        return findAutoScenarioEntities(false, maxResults, firstResult);
-    }
-
-    private List<Scenario> findAutoScenarioEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Scenario.class));
-            
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    public Scenario findAutoScenario(Long id) {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(Scenario.class, id);
-        } finally {
-            em.close();
-        }
-    }
-    
-    public List<Scenario> findAutoScenarioFilter()
-    {
-        EntityManager em = getEntityManager();
-        CriteriaQuery cq = em.getCriteriaBuilder().createQuery(Scenario.class);
-        Root c = cq.from(Scenario.class);
-        cq.select(c.get("name")).distinct(true);
-        cq.select(c.get("requestUrl")).distinct(true);
-        Query q = em.createQuery(cq);
-        
-        return q.getResultList();
-    }
-
-    public int getAutoScenarioCount() {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Scenario> rt = cq.from(Scenario.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
-        } finally {
-            em.close();
         }
     }
     
