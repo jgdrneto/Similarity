@@ -24,15 +24,10 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author Jullian
  */
-public class AutoExecutionJpaController implements Serializable {
+public class ExecutionJpaController extends JPAController<Execution> implements Serializable {
 
-    public AutoExecutionJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    public ExecutionJpaController(EntityManagerFactory emf) {
+        super(emf,Execution.class);
     }
 
     public void create(Execution autoExecution) {
@@ -72,7 +67,7 @@ public class AutoExecutionJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Execution persistentAutoExecution = em.find(Execution.class, autoExecution.getId());
+            Execution persistentAutoExecution = em.find(entityClass, autoExecution.getId());
             List<Scenario> autoScenarioListOld = persistentAutoExecution.getAutoScenarioList();
             List<Scenario> autoScenarioListNew = autoExecution.getAutoScenarioList();
             List<Scenario> attachedAutoScenarioListNew = new ArrayList<Scenario>();
@@ -105,7 +100,7 @@ public class AutoExecutionJpaController implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = autoExecution.getId();
-                if (findAutoExecution(id) == null) {
+                if (findEntity(id) == null) {
                     throw new NonexistentEntityException("The Execution with id " + id + " no longer exists.");
                 }
             }
@@ -142,51 +137,5 @@ public class AutoExecutionJpaController implements Serializable {
             }
         }
     }
-
-    public List<Execution> findAutoExecutionEntities() {
-        return findAutoExecutionEntities(true, -1, -1);
-    }
-
-    public List<Execution> findAutoExecutionEntities(int maxResults, int firstResult) {
-        return findAutoExecutionEntities(false, maxResults, firstResult);
-    }
-
-    private List<Execution> findAutoExecutionEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Execution.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    public Execution findAutoExecution(Long id) {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(Execution.class, id);
-        } finally {
-            em.close();
-        }
-    }
-
-    public int getAutoExecutionCount() {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Execution> rt = cq.from(Execution.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
-        } finally {
-            em.close();
-        }
-    }
-    
+   
 }

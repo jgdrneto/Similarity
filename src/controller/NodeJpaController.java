@@ -26,15 +26,10 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author Jullian
  */
-public class AutoNodeJpaController implements Serializable {
+public class NodeJpaController extends JPAController<Node> implements Serializable {
 
-    public AutoNodeJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    public NodeJpaController(EntityManagerFactory emf) {
+        super(emf,Node.class);
     }
 
     public void create(Node autoNode) {
@@ -252,8 +247,8 @@ public class AutoNodeJpaController implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = autoNode.getId();
-                if (findAutoNode(id) == null) {
-                    throw new NonexistentEntityException("The autoNode with id " + id + " no longer exists.");
+                if (findEntity(id) == null) {
+                    throw new NonexistentEntityException("The Node with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -271,7 +266,7 @@ public class AutoNodeJpaController implements Serializable {
             em.getTransaction().begin();
             Node autoNode;
             try {
-                autoNode = em.getReference(Node.class, id);
+                autoNode = em.getReference(entityClass, id);
                 autoNode.getId();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The Node with id " + id + " no longer exists.", enfe);
@@ -310,50 +305,4 @@ public class AutoNodeJpaController implements Serializable {
         }
     }
 
-    public List<Node> findAutoNodeEntities() {
-        return findAutoNodeEntities(true, -1, -1);
-    }
-
-    public List<Node> findAutoNodeEntities(int maxResults, int firstResult) {
-        return findAutoNodeEntities(false, maxResults, firstResult);
-    }
-
-    private List<Node> findAutoNodeEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Node.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    public Node findAutoNode(Long id) {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(Node.class, id);
-        } finally {
-            em.close();
-        }
-    }
-
-    public int getAutoNodeCount() {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Node> rt = cq.from(Node.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
-        } finally {
-            em.close();
-        }
-    }
-    
 }

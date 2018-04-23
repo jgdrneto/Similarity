@@ -159,7 +159,7 @@ public class ScenarioJPAController extends JPAController<Scenario> implements Se
                 autoScenario = em.getReference(entityClass, id);
                 autoScenario.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The autoScenario with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The Scenario with id " + id + " no longer exists.", enfe);
             }
             Execution executionId = autoScenario.getExecutionId();
             if (executionId != null) {

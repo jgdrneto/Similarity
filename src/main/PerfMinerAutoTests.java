@@ -5,7 +5,7 @@
  */
 package main;
 
-import controller.AutoNodeJpaController;
+import controller.NodeJpaController;
 import controller.ScenarioJPAController;
 import similarity.entity.Node;
 import similarity.entity.Scenario;

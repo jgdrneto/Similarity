@@ -23,17 +23,12 @@ import javax.persistence.EntityManagerFactory;
  *
  * @author Jullian
  */
-public class AutoQueryJpaController implements Serializable {
+public class QueryDBJpaController extends JPAController<QueryDB> implements Serializable {
 
-    public AutoQueryJpaController(EntityManagerFactory emf) {
-        this.emf = emf;
+    public QueryDBJpaController(EntityManagerFactory emf) {
+        super(emf,QueryDB.class);
     }
-    private EntityManagerFactory emf = null;
-
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
-
+    
     public void create(QueryDB autoQuery) {
         EntityManager em = null;
         try {
@@ -62,7 +57,7 @@ public class AutoQueryJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            QueryDB persistentAutoQuery = em.find(QueryDB.class, autoQuery.getId());
+            QueryDB persistentAutoQuery = em.find(entityClass, autoQuery.getId());
             Node nodeIdOld = persistentAutoQuery.getNodeId();
             Node nodeIdNew = autoQuery.getNodeId();
             if (nodeIdNew != null) {
@@ -83,8 +78,8 @@ public class AutoQueryJpaController implements Serializable {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = autoQuery.getId();
-                if (findAutoQuery(id) == null) {
-                    throw new NonexistentEntityException("The autoQuery with id " + id + " no longer exists.");
+                if (findEntity(id) == null) {
+                    throw new NonexistentEntityException("The QueryDB with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -102,10 +97,10 @@ public class AutoQueryJpaController implements Serializable {
             em.getTransaction().begin();
             QueryDB autoQuery;
             try {
-                autoQuery = em.getReference(QueryDB.class, id);
+                autoQuery = em.getReference(entityClass, id);
                 autoQuery.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The autoQuery with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The QueryDB with id " + id + " no longer exists.", enfe);
             }
             Node nodeId = autoQuery.getNodeId();
             if (nodeId != null) {
@@ -121,50 +116,4 @@ public class AutoQueryJpaController implements Serializable {
         }
     }
 
-    public List<QueryDB> findAutoQueryEntities() {
-        return findAutoQueryEntities(true, -1, -1);
-    }
-
-    public List<QueryDB> findAutoQueryEntities(int maxResults, int firstResult) {
-        return findAutoQueryEntities(false, maxResults, firstResult);
-    }
-
-    private List<QueryDB> findAutoQueryEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(QueryDB.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    public QueryDB findAutoQuery(Long id) {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(QueryDB.class, id);
-        } finally {
-            em.close();
-        }
-    }
-
-    public int getAutoQueryCount() {
-        EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<QueryDB> rt = cq.from(QueryDB.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
-        } finally {
-            em.close();
-        }
-    }
-    
 }
