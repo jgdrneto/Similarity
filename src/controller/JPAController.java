@@ -77,10 +77,10 @@ public abstract class JPAController<T> implements Serializable{
         }
     }
     
-    public List<Scenario> findEntityFilter()
+    public List<T> findEntityFilter()
     {
         EntityManager em = getEntityManager();
-        CriteriaQuery cq = em.getCriteriaBuilder().createQuery(Scenario.class);
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery(entityClass);
         Root c = cq.from(entityClass);
         cq.select(c.get("name")).distinct(true);
         cq.select(c.get("requestUrl")).distinct(true);
